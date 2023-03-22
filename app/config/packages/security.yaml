@@ -1,7 +1,11 @@
 security:
     password_hashers:
         App\Entity\User:
-            algorithm: auto
+            algorithm: 'auto'
+        # auto hasher with custom options for all PasswordAuthenticatedUserInterface instances
+        Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface:
+            algorithm: 'auto'
+            cost:      15
         argon2i_encoder:
             algorithm: argon2i
 
@@ -27,6 +31,8 @@ security:
             provider: app_user_provider
             jwt: ~
         main:
+            stateless: true
+            provider: app_user_provider
             json_login:
                 check_path: /authentication_token
                 username_path: username
@@ -38,3 +44,4 @@ security:
         - { path: ^/api/docs, roles: PUBLIC_ACCESS }
         - { path: ^/api/public/, roles: PUBLIC_ACCESS }
         - { path: ^/api, roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/authentication_token, roles: PUBLIC_ACCESS }
